@@ -1,0 +1,258 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using System.Diagnostics;
+
+namespace Lab1
+{
+    class Program
+    {
+        private static List<string> words = new List<string>();
+
+        static void Main(string[] args)
+        {
+            bool run = true;
+            char selection;
+            while (run)
+            {
+                Console.WriteLine("1 - Import Words From File");
+                Console.WriteLine("2 - Bubble Sort Words");
+                Console.WriteLine("3 - LINQ/LAMBDA Sort Words");
+                Console.WriteLine("4 - Count The Distinct Words");
+                Console.WriteLine("5 - Take The First 10 Words");
+                Console.WriteLine("6 - Get the number of words that start with 'j' and display the count");
+                Console.WriteLine("7 - Get and display of words that end with 'd' and display the count");
+                Console.WriteLine("8 - Get and display of words that are greater than 4 characters long, and display the count");
+                Console.WriteLine("9 - Get and display of words that are less than 3 characters long and starts with 'a', and display the count");
+                Console.WriteLine("x - Exit");
+
+                selection = (char)Console.Read();
+                Console.ReadLine();
+              
+
+                switch (selection)
+                {
+                    case '1':
+                        ImportWordsfromFile();
+                        break;
+                    case '2':
+                        BubbleSortwords(words);
+                        break;
+                    case '3':
+                        LINQLambdasortwords(words);
+                        break;
+                    case '4':
+                        CounttheDistinctWords(words);
+                        break;
+                    case '5':
+                        Takethefirst10words(words);
+                        break;
+                    case '6':
+                        StartwithJDisplaycount(words);
+                        break;
+                    case '7':
+                        EndwithDDisplaycount(words);
+                        break;
+                    case '8':
+                        Greater4Displaycount(words);
+                        break;
+                    case '9':
+                        Less3StartA(words);
+                        break;
+                    case 'x':
+                        Console.WriteLine("Exit");
+                        run = false;
+                        break;
+                    default:
+                        Console.WriteLine("Please choose one of the following");
+                        break;
+                }
+            }
+        }
+        
+//        1.	Create a method that takes the words from a text file and stores them in an array or List
+
+//              a.  The namespace that provides this functionality is in System.IO
+//              b.	The easiest way to read a text file is to use the class System.IO.StreamReader, the constructor of which takes a path to the file you want to read
+//              c.For each word you find in the file add it to a List or array object. Use a generic list of type IList<string>.Coded as such: IList<string> words = new List<string>(); Lists are a very powerful tool in .NET and provide dozens of extension methods that will help with this lab.
+
+//        2.	Once the method runs, display the number of words you read from the file
+
+//        3.	Test your method using the file ‘Words.txt’ provided in the example.
+
+        private static void ImportWordsfromFile()
+        {
+
+            StreamReader reader = new StreamReader("Words.txt");
+            
+            string word;
+            int counter = 0;
+
+            while ((word = reader.ReadLine()) != null)
+            {
+                words.Add(word);
+                counter++;
+            }
+            
+            Console.WriteLine("DONE");
+            Console.WriteLine("There is no Words.txt", counter);
+
+        }
+
+//        1.	Create a method that accepts a list or array of strings and provides a bubble sort on the collection.
+
+//                 a.Your methods signature must look like this: IList<string> BubbleSort(IList<string> words)
+
+//        2.	Use your extensive knowledge of Data Structures(google) and write code to perform a bubble sort on the list.
+
+//        3.	Once your list is sorted display how long it took to sort the list of words.
+
+        private static List<string> BubbleSortwords(List<string> words)
+        {
+
+            Stopwatch Time = Stopwatch.StartNew();
+            for (int i = 0; i < (words.Count - 1); i++)
+            {
+                for (int j = i + 1; j < words.Count; j++)
+                {
+                    if (string.Compare(words[j], words[i]) < 0)
+                    {
+                        string tempString = words[j];
+                        
+                        words[j] = words[i];
+                        
+                        words[i] = tempString;
+                    }
+                }
+            }
+            Time.Stop();
+            
+            Console.WriteLine("Time it took is 0", Time.ElapsedMilliseconds);
+
+            
+            return words;
+        }
+
+//        1.	Use a LINQ query or a Lambda expression to sort your list of strings
+//        2.	Once your list is sorted display how long it took to sort the list of words.
+//        (You should note that it will be significantly faster to sort the list using the built-in technologies, more on that later.)
+
+        private static List<string> LINQLambdasortwords(List<string> words)
+        {
+            List<string> query = words.OrderBy(str => str).ToList();
+            
+            words = query;
+
+            var Time = Stopwatch.StartNew();
+            
+            Time.Stop();
+            
+            Console.WriteLine("Time it took is 0", Time.ElapsedMilliseconds);
+            
+            return words;
+        }
+
+//        1.	Use a LINQ query or Lambda expression to count all the distinct words.
+//        2.	Display the result.
+
+        private static void CounttheDistinctWords(List<string> words)
+        {
+
+            int DistinctWordsNumber = (from x in words select x).Distinct().Count();
+            
+            Console.WriteLine("Distinct words number is 0!", DistinctWordsNumber);
+
+        }
+        
+//        1.	Use a LINQ query or a Lambda expression to ‘take’ only the first 10 words in the list.
+//        2.	Display these 10 words
+
+        private static void Takethefirst10words(List<string> words)
+        {
+
+            List<string> take = words.Take(10).ToList();
+            
+            foreach (string word in take)
+            {
+                Console.WriteLine(word);
+            }
+        }
+
+//        1.	Use a LINQ query or Lambda expression to count the number of words that start with ‘j’
+//        2.	Display the result
+
+        private static void StartwithJDisplaycount(List<string> words)
+        {
+            IEnumerable<string> query = from x in words where x.StartsWith("j") select x;
+            
+            int count = 0;
+            
+            foreach (var word in query)
+            {
+                Console.WriteLine(word);
+                count++;
+            }
+            
+            Console.WriteLine("There are no words thats start with J", count);
+        }
+
+//        1.	Use a LINQ query or Lambda expression to find all the words that end with ‘d’
+//        2.	Display the words and the number of words found
+
+        private static void EndwithDDisplaycount(List<string> words)
+        {
+
+            IEnumerable<string> query = from x in words where x.EndsWith("d") select x;
+            
+            int count = 0;
+            
+            foreach (string word in query)
+            {
+                Console.WriteLine(word);
+                count++;
+            }
+            
+            Console.WriteLine("There are no words that end with d", count);
+
+        }
+
+//        1.	Use a LINQ query or Lambda expression to find all the words that are greater than 4 characters’ long
+//        2.	Display the words and the number of words found
+
+        private static void Greater4Displaycount(List<string> words)
+        {
+
+            IEnumerable<string> query = from x in words where x.Length > 4 select x;
+            
+            int count = 0;
+            
+            foreach (string word in query)
+            {
+                Console.WriteLine(word);
+                count++;
+            }
+            
+            Console.WriteLine("There are no words that are longer than 4 characters", count);
+        }
+
+//        1.	Use a LINQ query or Lambda expression to find all the words that are less than 3 characters long and start with the letter ‘a’.
+//        2.	Display the words and the number of words found
+
+        private static void Less3StartA(List<string> words)
+        {
+
+            IEnumerable<string> query = from x in words where x.Length < 3 && x.StartsWith("a") select x;
+            
+            int count = 0;
+            
+            foreach (string word in query)
+            {
+                Console.WriteLine(word);
+                count++;
+            }
+            
+            Console.WriteLine("There are no words that have less than 3 charactres and start with the letter a", count);
+        }
+    }
+}
